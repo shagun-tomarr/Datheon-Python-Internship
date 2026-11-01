@@ -1,0 +1,121 @@
+import random
+
+WORDS = [
+    "python",
+    "computer",
+    "student",
+    "technology",
+    "programming",
+    "engineer",
+    "science",
+    "college"
+]
+
+HANGMAN_STAGES = [
+    """
+     +---+
+         |
+         |
+         |
+        ===
+    """,
+    """
+     +---+
+     O   |
+         |
+         |
+        ===
+    """,
+    """
+     +---+
+     O   |
+     |   |
+         |
+        ===
+    """,
+    """
+     +---+
+     O   |
+    /|   |
+         |
+        ===
+    """,
+    """
+     +---+
+     O   |
+    /|\\  |
+         |
+        ===
+    """,
+    """
+     +---+
+     O   |
+    /|\\  |
+    /    |
+        ===
+    """,
+    """
+     +---+
+     O   |
+    /|\\  |
+    / \\  |
+        ===
+    """
+]
+
+
+def play_hangman():
+    secret_word = random.choice(WORDS)
+    guessed_letters = set()
+    wrong_guesses = 0
+    max_attempts = 6
+
+    print("\nWelcome to Hangman!")
+    print("Guess the hidden word, one letter at a time.")
+
+    while wrong_guesses < max_attempts:
+        print(HANGMAN_STAGES[wrong_guesses])
+
+        display_word = " ".join(
+            letter if letter in guessed_letters else "_"
+            for letter in secret_word
+        )
+
+        print("Word:", display_word)
+        print("Wrong guesses:", wrong_guesses, "/", max_attempts)
+
+        if guessed_letters:
+            print("Guessed letters:", ", ".join(
+                sorted(guessed_letters)
+            ))
+
+        guess = input("Enter one letter: ").strip().lower()
+
+        if len(guess) != 1 or not guess.isalpha():
+            print("Please enter exactly one alphabetic letter.")
+            continue
+
+        if guess in guessed_letters:
+            print("You already guessed that letter!")
+            continue
+
+        guessed_letters.add(guess)
+
+        if guess in secret_word:
+            print("Correct guess!")
+        else:
+            wrong_guesses += 1
+            print("Incorrect guess!")
+
+        if all(letter in guessed_letters for letter in secret_word):
+            print("\nCongratulations! You won!")
+            print("The word was:", secret_word)
+            return
+
+    print(HANGMAN_STAGES[wrong_guesses])
+    print("\nGame over! You ran out of attempts.")
+    print("The word was:", secret_word)
+
+
+if __name__ == "__main__":
+    play_hangman()
